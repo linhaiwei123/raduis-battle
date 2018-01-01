@@ -15,6 +15,11 @@ export enum Code {
     shootRsp = 11,
 }
 
+export interface IReq {
+    code:Code,
+    req:any,
+}
+
 export interface ILoginReq {
     name:string,
 }

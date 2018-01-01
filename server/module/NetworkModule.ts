@@ -1,13 +1,16 @@
 import * as WebSocket from 'ws';
-class NetWorkModule {
-    private _wss:WebSocket.Server;
+import EventModule from './EventModule';
+import Global from '../global/Global';
+import { IReq } from '../../typing/Common';
+export default class NetWorkModule {
+    
     private _port:number = 443;
     initialize() {
         this._initRef();
         this._initEvent();
-        
     }
 
+    private _wss:WebSocket.Server;
     private _initRef() {
         this._wss = new WebSocket.Server({port:this._port});
     }
@@ -17,8 +20,8 @@ class NetWorkModule {
     }
 
     private _onConnection(ws:WebSocket) {
-        ws.on('message',(data:WebSocket.Data)=>{
-            
+        ws.on('message',(data:IReq)=>{
+            Global.instance.eventModule.emit(data.code,data.req);
         });
         ws.on('error',(err:Error) =>{
             console.log(err);
@@ -27,4 +30,5 @@ class NetWorkModule {
             console.log({code,reason});
         })
     }
+
 }
