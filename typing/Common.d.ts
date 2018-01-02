@@ -44,8 +44,9 @@ export interface IUserInfo {
     name:string,
     baseInfo:IBaseInfo,
     weaponInfo:IWeaponInfo,
-    skillInfoList:Array<ISkillInfo>
+    skillInfoList:Array<ISkillInfo>,
     positionInfo:IPositionInfo,
+    skillStatusInfoList:Array<ISkillStatusInfo>
 }
 
 export interface IBaseInfo {
@@ -109,7 +110,7 @@ export interface IWindInfo {
     windPower:number,
 }
 
-export interface ISkillStatusList {
+export interface ISkillStatusInfo {
     skillId:number,
     userId:number,
     duration:number,
