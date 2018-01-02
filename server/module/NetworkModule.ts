@@ -31,4 +31,5 @@ export default class NetWorkModule {
         })
     }
 
+    //todo clients getter
 }

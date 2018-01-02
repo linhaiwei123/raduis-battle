@@ -1,5 +1,6 @@
 import EventModule from "../module/EventModule";
 import NetWorkModule from "../module/NetworkModule";
+import DataModule from "../module/DataModule";
 
 export default class Global {
     private static _instance:Global = null;
@@ -15,6 +16,11 @@ export default class Global {
     public get networkModule():NetWorkModule {
         return this._networkModule;
     }
+    private _dataModule:DataModule;
+    public get dataModule() {
+        return this._dataModule;
+    }
+    
     initialize() {
         this._initInstance();
         this._initModule();
@@ -31,10 +37,13 @@ export default class Global {
 
         this._networkModule = new NetWorkModule();
         this._networkModule.initialize();
+
+        this._dataModule = new DataModule();
+        this._dataModule.initialize();
     }
 
     private _initController() {
-
+        
     }
 }
 
