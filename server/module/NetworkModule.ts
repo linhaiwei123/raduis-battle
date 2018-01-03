@@ -1,7 +1,9 @@
 import * as WebSocket from 'ws';
 import EventModule from './EventModule';
 import Global from '../global/Global';
-import { IReq } from '../../typing/Common';
+import { IReq, Code, IUserInfo, ILoginReq, ILoginRsp, IRsp } from '../../typing/Common';
+import Uuid from '../util/Uuid';
+import { IWsItem } from '../typing/Server';
 export default class NetWorkModule {
     
     private _port:number = 443;
@@ -20,8 +22,30 @@ export default class NetWorkModule {
     }
 
     private _onConnection(ws:WebSocket) {
-        ws.on('message',(data:IReq)=>{
-            Global.instance.eventModule.emit(data.code,data.req);
+        //保存wsItem
+        let wsItem = {} as IWsItem;
+        wsItem.userId = Uuid.instance.create();
+        wsItem.ws = <any>ws;
+        Global.instance.dataModule.wsList.insert(<any>wsItem);
+        
+        ws.on('message',(dataReq:IReq)=>{
+            if(dataReq.code === Code.loginReq) {
+                //处理login req
+                let req = dataReq.req as ILoginReq;
+                let userInfoItem = {} as IUserInfo;
+                userInfoItem.name = req.name;
+                userInfoItem.userId = wsItem.userId;
+                Global.instance.dataModule.userInfoList.insert(userInfoItem);
+                //返回login rsp
+                let rsp = {} as ILoginRsp;
+                rsp.userId = userInfoItem.userId;
+                let dataRsp = {} as IRsp;
+                dataRsp.code = Code.loginRsp;
+                dataRsp.rsp = rsp;
+                wsItem.ws.send(dataRsp);
+                return;
+            }
+            Global.instance.eventModule.emit(dataReq.code,dataReq.req);
         });
         ws.on('error',(err:Error) =>{
             console.log(err);
@@ -30,6 +54,4 @@ export default class NetWorkModule {
             console.log({code,reason});
         })
     }
-
-    //todo clients getter
 }

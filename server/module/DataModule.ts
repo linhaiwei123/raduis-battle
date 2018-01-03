@@ -1,4 +1,6 @@
 import Clone from "../util/Clone";
+import { IWsItem } from "../typing/Server";
+import { IUserInfo } from "../../typing/Common";
 
 
 export default class DataModule {
@@ -8,18 +10,26 @@ export default class DataModule {
 
     private _collectionMap:{[name:string]:Collection<any>}
     
-    public getCollection<T>(name:string):Collection<T> {
+    public get<T>(name:string):Collection<T> {
         if(!this._collectionMap[name]){
             this._collectionMap[name] = new Collection<T>(name);
         }
         return this._collectionMap[name];
     }
 
-    public dropCollection(name:string) {
+    public drop(name:string) {
         if(this._collectionMap[name]) {
             this._collectionMap[name].clean();
             delete this._collectionMap[name];
         }
+    }
+
+    public get wsList():Collection<IWsItem> {
+        return this.get<IWsItem>('wsList');
+    }
+
+    public get userInfoList():Collection<IUserInfo> {
+        return this.get<IUserInfo>('userInfoList');
     }
 }
 

@@ -20,27 +20,34 @@ export interface IReq {
     req:any,
 }
 
+export interface IRsp {
+    code:Code,
+    rsp:any,
+}
+
 export interface ILoginReq {
     name:string,
 }
 
 export interface ILoginRsp {
-    err:string,
-    userId:number,
+    userId:string,
 }
 
 export interface IMatchReq {
-    userId:number,
+    userId:string,
+    matching:boolean,
 }
 
 export interface IMatchRsp {
-    roomId:number,
+    roomId:string,
     //玩家信息列表
     userInfoList:Array<IUserInfo>
 }
 
 export interface IUserInfo {
-    userId:number,
+    userId:string,
+    roomId:string,
+    matching:boolean,
     name:string,
     baseInfo:IBaseInfo,
     weaponInfo:IWeaponInfo,
@@ -67,7 +74,7 @@ export interface ISkillInfo {
 }
 
 export interface IMoveReq {
-    userId:number,
+    userId:string,
     positionInfo:IPositionInfo,
 }
 
@@ -77,12 +84,12 @@ export interface IPositionInfo {
 }
 
 export interface IMoveRsp {
-    userId:number,
+    userId:string,
     positionInfo:IPositionInfo
 }
 
 export interface IShootReq {
-    userId:number,
+    userId:string,
     positionInfo:IPositionInfo,
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
@@ -94,7 +101,7 @@ export interface IShootInfo {
 }
 
 export interface IShootRsp {
-    userId:number,
+    userId:string,
     positionInfo:IPositionInfo,
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
@@ -112,7 +119,7 @@ export interface IWindInfo {
 
 export interface ISkillStatusInfo {
     skillId:number,
-    userId:number,
+    userId:string,
     duration:number,
 }
 

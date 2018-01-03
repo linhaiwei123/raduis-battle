@@ -1,7 +1,7 @@
 export default class Uuid {
 
     private static _instance:Uuid;
-    public get instance():Uuid {
+    public static get instance():Uuid {
         return Uuid._instance;
     }
 
