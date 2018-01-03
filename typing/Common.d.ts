@@ -71,6 +71,7 @@ export interface IWeaponInfo {
 
 export interface ISkillInfo {
     skillId:number,
+    skillDesc:string,
 }
 
 export interface IMoveReq {
@@ -109,6 +110,7 @@ export interface IShootRsp {
 }
 
 export interface IGameInfo {
+    roomId:string,
     windInfo:IWindInfo,
 }
 
