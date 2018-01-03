@@ -61,6 +61,7 @@ export interface IBaseInfo {
     atk:number,//攻击
     def:number,//防御
     agl:number,//敏捷
+    radius:number,//半径
 }
 
 export interface IWeaponInfo {
