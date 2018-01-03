@@ -71,6 +71,7 @@ export interface IWeaponInfo {
 
 export interface ISkillInfo {
     skillId:number,
+    skillName:string,
     skillDesc:string,
 }
 
