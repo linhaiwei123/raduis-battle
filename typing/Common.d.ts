@@ -74,6 +74,8 @@ export interface ISkillInfo {
     skillId:number,
     skillName:string,
     skillDesc:string,
+    duration:number,
+    consume:number,
 }
 
 export interface IMoveReq {

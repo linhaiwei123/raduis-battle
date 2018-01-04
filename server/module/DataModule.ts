@@ -1,11 +1,34 @@
 import Clone from "../util/Clone";
 import { IWsItem } from "../typing/Server";
-import { IUserInfo } from "../../typing/Common";
+import { IUserInfo, ISkillInfo, IWeaponInfo } from "../../typing/Common";
+import skillInfoList from '../excel/skill';
+import weaponInfoList from '../excel/weapon';
 
 
 export default class DataModule {
     public initialize() {
-        
+        this._initSkillInfoList();
+        this._initWeaponInfoList();
+    }
+
+    private _initSkillInfoList() {
+        skillInfoList.forEach(skillInfo => {
+            skillInfo.consume = <any>+skillInfo.consume;
+            skillInfo.duration = <any>+skillInfo.duration;
+            skillInfo.skillId = <any>+skillInfo.skillId;
+
+            this.skillInfoList.insert(<any>skillInfo);
+        })
+    }
+
+    private _initWeaponInfoList() {
+        weaponInfoList.forEach(weaponInfo => {
+            weaponInfo.exploreRadius = <any>+weaponInfo.exploreRadius
+            weaponInfo.shootRadius = <any>+weaponInfo.shootRadius
+            weaponInfo.weaponId = <any>+weaponInfo.weaponId
+
+            this.weaponInfoList.insert(<any>weaponInfo);
+        })
     }
 
     private _collectionMap:{[name:string]:Collection<any>}
@@ -30,6 +53,14 @@ export default class DataModule {
 
     public get userInfoList():Collection<IUserInfo> {
         return this.get<IUserInfo>('userInfoList');
+    }
+
+    public get skillInfoList():Collection<ISkillInfo> {
+        return this.get<ISkillInfo>('skillInfoList');
+    }
+
+    public get weaponInfoList():Collection<IWeaponInfo> {
+        return this.get<IWeaponInfo>('weaponInfoList');
     }
 }
 
