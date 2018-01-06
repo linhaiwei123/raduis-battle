@@ -39,9 +39,7 @@ export interface IMatchReq {
 }
 
 export interface IMatchRsp {
-    roomId:string,
-    //玩家信息列表
-    userInfoList:Array<IUserInfo>
+    gameContextInfo:IGameContextInfo
 }
 
 export interface IUserInfo {
@@ -62,6 +60,7 @@ export interface IBaseInfo {
     def:number,//防御
     agl:number,//敏捷
     radius:number,//半径
+    power:number,//体力
 }
 
 export interface IWeaponInfo {
@@ -80,6 +79,7 @@ export interface ISkillInfo {
 
 export interface IMoveReq {
     userId:string,
+    roomId:string,
     positionInfo:IPositionInfo,
 }
 
@@ -95,22 +95,24 @@ export interface IMoveRsp {
 
 export interface IShootReq {
     userId:string,
+    roomId:string,
     positionInfo:IPositionInfo,
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
+    skillIndex:number,
 }
 
 export interface IShootInfo {
-    ratioX:number,
-    ratioY:number,
+    ratio:number,
+    angle:number,
 }
 
 export interface IShootRsp {
     userId:string,
-    positionInfo:IPositionInfo,
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
-    gameInfo:IGameInfo,
+    shootPosition:IPositonInfo,
+    gameContextInfo:IGameContextInfo,
 }
 
 export interface IGameInfo {
@@ -124,9 +126,16 @@ export interface IWindInfo {
 }
 
 export interface ISkillStatusInfo {
-    skillId:number,
+    skillInfo:ISkillInfo,
     userId:string,
     duration:number,
+    radio:number,
+    shootPosition:IPositionInfo
+}
+
+export interface IGameContextInfo {
+    userInfoList:Array<IUserInfo>
+    gameInfo:IGameInfo
 }
 
 

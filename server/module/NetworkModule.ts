@@ -54,4 +54,18 @@ export default class NetWorkModule {
             console.log({code,reason});
         })
     }
+
+    public sendToUser(userId:string,rsp:IRsp) {
+        let wsList = Global.instance.dataModule.wsList.select(item => item.userId === userId);
+        if(wsList && wsList.length !== 0) {
+            wsList[0].ws.send(rsp);
+        }
+    }
+
+    public sendToRoom(roomId:string,rsp:IRsp) {
+        let gameInfoList = Global.instance.dataModule.gameContextInfoList.select(item => item.gameInfo.roomId === roomId);
+        if(gameInfoList && gameInfoList.length !== 0) {
+            gameInfoList[0].userInfoList.forEach(item => this.sendToUser(item.userId,rsp));
+        }
+    }
 }

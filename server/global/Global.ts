@@ -1,6 +1,8 @@
 import EventModule from "../module/EventModule";
 import NetWorkModule from "../module/NetworkModule";
 import DataModule from "../module/DataModule";
+import MatchController from "../controller/MatchController";
+import GameController from "../controller/GameController";
 
 export default class Global {
     private static _instance:Global = null;
@@ -19,6 +21,14 @@ export default class Global {
     private _dataModule:DataModule;
     public get dataModule() {
         return this._dataModule;
+    }
+    private _matchController:MatchController;
+    public get matchController():MatchController {
+        return this._matchController;
+    }
+    private _gameController:GameController;
+    public get gameController():GameController {
+        return this._gameController;
     }
     
     initialize() {
@@ -43,7 +53,10 @@ export default class Global {
     }
 
     private _initController() {
-        
+        this._matchController = new MatchController();
+        this._matchController.initialize();
+        this._gameController = new GameController();
+        this._gameController.initialize();
     }
 }
 

@@ -1,8 +1,8 @@
 import Global from "../global/Global";
-import { Code, IMatchReq } from "../../typing/Common";
+import { Code, IMatchReq, IMatchRsp, IRsp } from "../../typing/Common";
 import Uuid from "../util/Uuid";
 
-class MatchController {
+export default class MatchController {
     initialize() {
         this._initEvent();
     }
@@ -25,10 +25,10 @@ class MatchController {
             if (matchingUserInfoList.length >= 1) {
                 //房间内玩家信息列表
                 let roomUserInfoList = [];
-                //房间Id
-                let roomId = Uuid.instance.create();
+                // //房间Id 
+                // let roomId = Uuid.instance.create();
                 //插入自己的信息
-                userInfoItem.roomId = roomId;
+                //userInfoItem.roomId = roomId;
                 userInfoItem.matching = false;
                 roomUserInfoList.push(userInfoItem);
 
@@ -36,14 +36,21 @@ class MatchController {
                 for (let i = 0, l = 3; i < l; i++) {
                     let otherUserInfoItem = matchingUserInfoList[i];
                     if(otherUserInfoItem){
-                        otherUserInfoItem.roomId = roomId;
+                        //otherUserInfoItem.roomId = roomId;
                         otherUserInfoItem.matching = false;
                         roomUserInfoList.push(otherUserInfoItem);
                     }
                 }
 
-                //通知GameController生成游戏上下文
-                
+                //GameController生成房间
+                let gameContextInfo = Global.instance.gameController.createGameContext(matchingUserInfoList);
+                let matchRsp = {} as IMatchRsp;
+                matchRsp.gameContextInfo = gameContextInfo;
+                let dataRsp = {} as IRsp;
+                dataRsp.code = Code.matchRsp;
+                dataRsp.rsp = matchRsp;
+                //返回匹配结果
+                Global.instance.networkModule.sendToRoom(gameContextInfo.gameInfo.roomId,dataRsp);
             }
         }
     }
