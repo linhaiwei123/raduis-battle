@@ -63,7 +63,7 @@ export default class NetWorkModule {
     }
 
     public sendToRoom(roomId:string,rsp:IRsp) {
-        let gameInfoList = Global.instance.dataModule.gameContextInfoList.select(item => item.gameInfo.roomId === roomId);
+        let gameInfoList = Global.instance.dataModule.gameInfoList.select(item => item.roomId === roomId);
         if(gameInfoList && gameInfoList.length !== 0) {
             gameInfoList[0].userInfoList.forEach(item => this.sendToUser(item.userId,rsp));
         }

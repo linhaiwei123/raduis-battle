@@ -1,6 +1,6 @@
 import Clone from "../util/Clone";
 import { IWsItem } from "../typing/Server";
-import { IUserInfo, ISkillInfo, IWeaponInfo, IGameContextInfo } from "../../typing/Common";
+import { IUserInfo, ISkillInfo, IWeaponInfo, IGameInfo } from "../../typing/Common";
 import skillInfoList from '../excel/skill';
 import weaponInfoList from '../excel/weapon';
 
@@ -63,8 +63,8 @@ export default class DataModule {
         return this.get<IWeaponInfo>('weaponInfoList');
     }
 
-    public get gameContextInfoList():Collection<IGameContextInfo> {
-        return this.get<IGameContextInfo>('gameContextInfoList');
+    public get gameInfoList():Collection<IGameInfo> {
+        return this.get<IGameInfo>('gameInfoList');
     }
 }
 

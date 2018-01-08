@@ -1,4 +1,4 @@
-import { IUserInfo, IBaseInfo, ISkillInfo, IWeaponInfo, IPositionInfo, IGameContextInfo, IGameInfo, IWindInfo, Code, IMoveReq, IMoveRsp, IRsp, IShootReq, IShootInfo, ISkillStatusInfo } from "../../typing/Common";
+import { IUserInfo, IBaseInfo, ISkillInfo, IWeaponInfo, IPositionInfo, IGameInfo, IWindInfo, Code, IMoveReq, IMoveRsp, IRsp, IShootReq, IShootInfo, ISkillStatusInfo, ISkillHitStatusInfo } from "../../typing/Common";
 import Global from "../global/Global";
 import Clone from "../util/Clone";
 import Uuid from "../util/Uuid";
@@ -15,13 +15,10 @@ export default class GameController  {
     }
 
     
-    public createGameContext(userInfoList:Array<IUserInfo>) {
-        let gameContextInfo = {} as IGameContextInfo;
-        this._createUserInfoGameContext(userInfoList);
-        gameContextInfo.gameInfo = this._createGameInfo();
-        gameContextInfo.userInfoList = userInfoList;
-        Global.instance.dataModule.gameContextInfoList.insert(gameContextInfo);
-        return gameContextInfo;
+    public createGame(userInfoList:Array<IUserInfo>) {
+        let gameInfo = this._createGameInfo(userInfoList);
+        Global.instance.dataModule.gameInfoList.insert(gameInfo);
+        return gameInfo;
     }
 
     private _createUserInfoGameContext(userInfoList:Array<IUserInfo>) {
@@ -33,14 +30,17 @@ export default class GameController  {
             for(let i =0,l = 3;i < l;i++) {
                 userInfo.skillInfoList.push(this._createSkillInfo());
             }
-            userInfo.skillStatusInfoList = [];
+            userInfo.skillHitStatusInfoList = [];
         })
+        return userInfoList;
     }
 
-    private _createGameInfo() {
+    private _createGameInfo(userInfoList:Array<IUserInfo>) {
         let gameInfo = {} as IGameInfo;
         gameInfo.roomId = Uuid.instance.create();
         gameInfo.windInfo = this._createWindInfo();
+        gameInfo.userInfoList = this._createUserInfoGameContext(userInfoList);
+        
         return gameInfo;
     }
 
@@ -105,45 +105,57 @@ export default class GameController  {
 
     private _onShootReq(req:IShootReq) {
         //获取房间信息
-        let gameContextInfoList = Global.instance.dataModule.gameContextInfoList.select(item => item.gameInfo.roomId === req.roomId);
-        if(gameContextInfoList && gameContextInfoList.length !== 0) {
-            let gameContextInfo = gameContextInfoList[0];
-            let userInfoList = gameContextInfo.userInfoList.filter(item => item.userId === req.userId);
+        let gameInfoList = Global.instance.dataModule.gameInfoList.select(item => item.roomId === req.roomId);
+        if(gameInfoList && gameInfoList.length !== 0) {
+            let gameInfo = gameInfoList[0];
+            if(req.round !== gameInfo.round) {
+                return;
+            }
+            let userInfoList = gameInfo.userInfoList.filter(item => item.userId === req.userId);
              //更新玩家位置信息
             if(userInfoList && userInfoList.length !== 0) {
                 let userInfo = userInfoList[0];
                 userInfo.positionInfo = req.positionInfo;
 
-                //重构 由技能决定是否需要将技能插入skillStatus,以及技能的参数
-                //计算射击位置
-                let shootPosition = this._getShootPosition(req.shootInfo,userInfo,gameContextInfo.gameInfo.windInfo);
-                //计算效果比例
-                let shootRatioList = this._getShootRatioList(shootPosition,userInfo.weaponInfo,gameContextInfo.userInfoList)
-                //插入技能状态列表
-                this._insertSkillStatus(gameContextInfo.userInfoList,shootRatioList,shootPosition,req.skillInfo,req.userId);
-            }
-        }
-    }
-
-    private _insertSkillStatus(userInfoList:Array<IUserInfo>,shootRatioList:number[],shootPosition:IPositionInfo,skillInfo:ISkillInfo,userId:string) {
-        for(let i = 0,l = shootRatioList.length; i < l; i++) {
-            if(shootRatioList[i] !== 0) {
+                //插入技能状态
                 let skillStatusInfo = {} as ISkillStatusInfo;
-                skillStatusInfo.duration = skillInfo.duration;
-                skillStatusInfo.skillInfo = skillInfo;
-                skillStatusInfo.userId = userId;
-                skillStatusInfo.radio = shootRatioList[i];
-                skillStatusInfo.shootPosition = shootPosition;
-                userInfoList[i].skillStatusInfoList.push(skillStatusInfo);
+                skillStatusInfo.duration = req.skillInfo.duration;
+                skillStatusInfo.shootPosition = this._getShootPosition(req.shootInfo,userInfo,gameInfo.windInfo);
+                skillStatusInfo.skillInfo = req.skillInfo;
+                skillStatusInfo.skillStatusId = Uuid.instance.create();
+                skillStatusInfo.userInfo = userInfo;
+                gameInfo.skillStatusInfoList.push(skillStatusInfo);
+
+                //迭代计算技能比例，插入
+                for(let skillStatusInfo of gameInfo.skillStatusInfoList) {
+                    let shootRatioList = this._getShootRatioList(skillStatusInfo,gameInfo.userInfoList);
+                    for(let i = 0,l = gameInfo.userInfoList.length; i < l; i++) {
+                        if(shootRatioList[i] !== 0) {
+                            let eachUserInfo = gameInfo.userInfoList[i];
+                            if(eachUserInfo.skillHitStatusInfoList.filter(item => item.skillStatusId === skillStatusInfo.skillStatusId).length === 0){
+                                let skillHitStatusInfo = {} as ISkillHitStatusInfo;
+                                skillHitStatusInfo.hitDuration = skillStatusInfo.skillInfo.hitDuration;
+                                skillHitStatusInfo.skillInfo = skillStatusInfo.skillInfo;
+                                skillHitStatusInfo.skillStatusId = skillStatusInfo.skillStatusId;
+                                skillHitStatusInfo.userInfo = skillStatusInfo.userInfo;
+                                skillHitStatusInfo.ratio = shootRatioList[i];
+                                eachUserInfo.skillHitStatusInfoList.push(skillHitStatusInfo);
+                            }
+                        }
+                    }
+                }
+
+                //计算技能效果
+                
             }
         }
     }
 
-    private _getShootRatioList(shootPosition:IPositionInfo,weaponInfo:IWeaponInfo,userInfoList:Array<IUserInfo>):number[] {
+    private _getShootRatioList(skillStatusInfo:ISkillStatusInfo,userInfoList:Array<IUserInfo>):number[] {
         let ret:number[] = [];
         for(let userInfo of userInfoList) {
-            let distance = Vector.instance.distance(userInfo.positionInfo,shootPosition);
-            let radiusDistance = userInfo.baseInfo.radius + weaponInfo.exploreRadius;
+            let distance = Vector.instance.distance(userInfo.positionInfo,skillStatusInfo.shootPosition);
+            let radiusDistance = userInfo.baseInfo.radius + skillStatusInfo.userInfo.weaponInfo.exploreRadius;
             if(distance > radiusDistance) {
                 ret.push(0);
             }else{

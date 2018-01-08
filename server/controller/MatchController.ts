@@ -43,14 +43,14 @@ export default class MatchController {
                 }
 
                 //GameController生成房间
-                let gameContextInfo = Global.instance.gameController.createGameContext(matchingUserInfoList);
+                let gameInfo = Global.instance.gameController.createGame(matchingUserInfoList);
                 let matchRsp = {} as IMatchRsp;
-                matchRsp.gameContextInfo = gameContextInfo;
+                matchRsp.gameInfo = gameInfo;
                 let dataRsp = {} as IRsp;
                 dataRsp.code = Code.matchRsp;
                 dataRsp.rsp = matchRsp;
                 //返回匹配结果
-                Global.instance.networkModule.sendToRoom(gameContextInfo.gameInfo.roomId,dataRsp);
+                Global.instance.networkModule.sendToRoom(gameInfo.roomId,dataRsp);
             }
         }
     }

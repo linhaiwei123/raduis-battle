@@ -39,7 +39,7 @@ export interface IMatchReq {
 }
 
 export interface IMatchRsp {
-    gameContextInfo:IGameContextInfo
+    gameInfo:IGameInfo
 }
 
 export interface IUserInfo {
@@ -51,7 +51,32 @@ export interface IUserInfo {
     weaponInfo:IWeaponInfo,
     skillInfoList:Array<ISkillInfo>,
     positionInfo:IPositionInfo,
-    skillStatusInfoList:Array<ISkillStatusInfo>
+    //skillStatusInfoList:Array<ISkillStatusInfo>
+    skillHitStatusInfoList:Array<ISkillHitStatusInfo>,
+    userStatusFlags:IUserStatusFlags,
+}
+
+export interface IUserStatusFlags {
+    silence:number,//沉默
+    freeze:number,//冰冻
+    constraint:number,//束缚
+    blind:number,//致盲
+    poison:number,//中毒
+    hide:number,//隐身
+    shackles:number,//枷锁
+    weak:number,//弱化
+    atkup:number,//加攻
+    defup:number,//加防
+    aglup:number,//加敏
+    chaos:number,//混乱
+}
+
+export interface ISkillHitStatusInfo {
+    skillStatusId:string,
+    hitDuration:number,
+    skillInfo:ISkillInfo,
+    userInfo:IUserInfo,
+    ratio:number,
 }
 
 export interface IBaseInfo {
@@ -74,6 +99,7 @@ export interface ISkillInfo {
     skillName:string,
     skillDesc:string,
     duration:number,
+    hitDuration:number,
     consume:number,
 }
 
@@ -100,6 +126,7 @@ export interface IShootReq {
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
     skillIndex:number,
+    round:number,
 }
 
 export interface IShootInfo {
@@ -112,12 +139,15 @@ export interface IShootRsp {
     shootInfo:IShootInfo,
     skillInfo:ISkillInfo,
     shootPosition:IPositonInfo,
-    gameContextInfo:IGameContextInfo,
+    gameInfo:IGameInfo,
 }
 
 export interface IGameInfo {
     roomId:string,
     windInfo:IWindInfo,
+    skillStatusInfoList:Array<ISkillStatusInfo>,
+    userInfoList:Array<IUserInfo>,
+    round:number,
 }
 
 export interface IWindInfo {
@@ -126,16 +156,11 @@ export interface IWindInfo {
 }
 
 export interface ISkillStatusInfo {
+    skillStatusId:string,
     skillInfo:ISkillInfo,
-    userId:string,
     duration:number,
-    radio:number,
-    shootPosition:IPositionInfo
-}
-
-export interface IGameContextInfo {
-    userInfoList:Array<IUserInfo>
-    gameInfo:IGameInfo
+    shootPosition:IPositionInfo,
+    userInfo:IUserInfo
 }
 
 
