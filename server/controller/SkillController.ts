@@ -1,4 +1,4 @@
-import { IGameContextInfo } from "../../typing/Common";
+import { IGameContextInfo, IUserInfo } from "../../typing/Common";
 
 export default class SkillController {
     public initialize() {
@@ -9,5 +9,12 @@ export default class SkillController {
         
     }
 
-    
+    public getHitPoint(dstUserInfo:IUserInfo,srcUserInfo:IUserInfo,ratio:number) {
+        
+    }
+
+    //连击
+    "0"(gameContextInfo:IGameContextInfo){
+
+    }
 }

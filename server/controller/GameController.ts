@@ -114,6 +114,7 @@ export default class GameController  {
                 let userInfo = userInfoList[0];
                 userInfo.positionInfo = req.positionInfo;
 
+                //重构 由技能决定是否需要将技能插入skillStatus,以及技能的参数
                 //计算射击位置
                 let shootPosition = this._getShootPosition(req.shootInfo,userInfo,gameContextInfo.gameInfo.windInfo);
                 //计算效果比例
