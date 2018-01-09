@@ -9,6 +9,8 @@ export default class GameController  {
         this._initEvent();
     }
 
+    private _maxPower:number = 10;
+
     private _initEvent() {
         Global.instance.eventModule.on(Code.moveReq,this._onMoveReq,this);
         Global.instance.eventModule.on(Code.shootReq,this._onShootReq,this);
@@ -41,6 +43,9 @@ export default class GameController  {
         gameInfo.roomId = Uuid.instance.create();
         gameInfo.windInfo = this._createWindInfo();
         gameInfo.userInfoList = this._createUserInfoGameContext(userInfoList);
+        let fastestUserInfo = this._updatePower(gameInfo.userInfoList);
+        gameInfo.fastestUserInfo = fastestUserInfo;
+        gameInfo.round = 1;
         return gameInfo;
     }
 
@@ -126,6 +131,11 @@ export default class GameController  {
                 skillStatusInfo.userInfo = userInfo;
                 gameInfo.skillStatusInfoList.push(skillStatusInfo);
 
+                //更新该玩家体力
+                userInfo.baseInfo.power -= req.skillInfo.consume;
+                //更新玩家手牌
+                userInfo.skillInfoList.splice(req.skillIndex,1,this._createSkillInfo());
+                
                 //迭代计算技能比例，插入
                 for(let skillStatusInfo of gameInfo.skillStatusInfoList) {
                     let shootRatioList = this._getShootRatioList(skillStatusInfo,gameInfo.userInfoList);
@@ -148,9 +158,45 @@ export default class GameController  {
                 }
 
                 //计算技能效果
+                for(let eachUserInfo of gameInfo.userInfoList) {
+                    for(let skillHitStatusInfo of eachUserInfo.skillHitStatusInfoList) {
+                        Global.instance.skillController.updateSkillHitStatusInfoList(eachUserInfo,skillHitStatusInfo);
+                    }
+                }
+                //计算全局技能状态
+                Global.instance.skillController.updateSkillStatusInfoList(gameInfo.skillStatusInfoList);
+
+                //计算所有玩家体力
+                let fastestUserInfo = this._updatePower(gameInfo.userInfoList);
                 
+                //更新下一个出手的玩家
+                gameInfo.fastestUserInfo = fastestUserInfo;
+                //回合增加
+                gameInfo.round++;
             }
         }
+    }
+
+    private _updatePower(userInfoList:Array<IUserInfo>) {
+        let fastestUserInfo:IUserInfo;
+        let minDuration:number = Number.POSITIVE_INFINITY;
+        userInfoList.forEach(item => {
+            let duration = (this._maxPower - item.baseInfo.power)/item.baseInfo.agl;
+            if(minDuration > duration){
+                fastestUserInfo = item;
+                minDuration = duration;
+            }
+        })
+
+        userInfoList.forEach(item => {
+            if(item === fastestUserInfo){
+                item.baseInfo.power = this._maxPower;
+            }else{
+                item.baseInfo.power += minDuration * item.baseInfo.agl
+            }
+        })
+
+        return fastestUserInfo;
     }
 
     private _getShootRatioList(skillStatusInfo:ISkillStatusInfo,userInfoList:Array<IUserInfo>):number[] {
@@ -193,9 +239,4 @@ export default class GameController  {
         positionInfo.y = length * Math.sin(radian);
         return positionInfo;
     }
-
-    //速度计算
-    // maxPower = 10 currPower;
-    // duration = (maxPower - currPower)/maxSpeed;
-    // other currPower = duartion * currSpeed + currPower;
 }

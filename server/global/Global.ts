@@ -3,6 +3,7 @@ import NetWorkModule from "../module/NetworkModule";
 import DataModule from "../module/DataModule";
 import MatchController from "../controller/MatchController";
 import GameController from "../controller/GameController";
+import SkillController from "../controller/SkillController";
 
 export default class Global {
     private static _instance:Global = null;
@@ -29,6 +30,10 @@ export default class Global {
     private _gameController:GameController;
     public get gameController():GameController {
         return this._gameController;
+    }
+    private _skillController:SkillController;
+    public get skillController():SkillController {
+        return this._skillController;
     }
     
     initialize() {
@@ -57,6 +62,8 @@ export default class Global {
         this._matchController.initialize();
         this._gameController = new GameController();
         this._gameController.initialize();
+        this._skillController = new SkillController();
+        this._skillController.initialize();
     }
 }
 

@@ -163,6 +163,7 @@ export interface IGameInfo {
     skillStatusInfoList:Array<ISkillStatusInfo>,
     userInfoList:Array<IUserInfo>,
     round:number,
+    fastestUserInfo:IUserInfo,
 }
 
 export interface IWindInfo {
