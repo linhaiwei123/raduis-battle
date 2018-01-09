@@ -1,4 +1,4 @@
-import * as WebSocket from 'ws';
+import WebSocket = require('ws');
 import EventModule from './EventModule';
 import Global from '../global/Global';
 import { IReq, Code, IUserInfo, ILoginReq, ILoginRsp, IRsp } from '../../typing/Common';
