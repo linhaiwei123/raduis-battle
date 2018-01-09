@@ -1,4 +1,4 @@
-import { IUserInfo, IBaseInfo, ISkillInfo, IWeaponInfo, IPositionInfo, IGameInfo, IWindInfo, Code, IMoveReq, IMoveRsp, IRsp, IShootReq, IShootInfo, ISkillStatusInfo, ISkillHitStatusInfo } from "../../typing/Common";
+import { IUserInfo, IBaseInfo, ISkillInfo, IWeaponInfo, IPositionInfo, IGameInfo, IWindInfo, Code, IMoveReq, IMoveRsp, IRsp, IShootReq, IShootInfo, ISkillStatusInfo, ISkillHitStatusInfo, IUserStatusFlags, SkillHitStatusStep } from "../../typing/Common";
 import Global from "../global/Global";
 import Clone from "../util/Clone";
 import Uuid from "../util/Uuid";
@@ -31,6 +31,7 @@ export default class GameController  {
                 userInfo.skillInfoList.push(this._createSkillInfo());
             }
             userInfo.skillHitStatusInfoList = [];
+            userInfo.userStatusFlags = {} as IUserStatusFlags;
         })
         return userInfoList;
     }
@@ -40,7 +41,7 @@ export default class GameController  {
         gameInfo.roomId = Uuid.instance.create();
         gameInfo.windInfo = this._createWindInfo();
         gameInfo.userInfoList = this._createUserInfoGameContext(userInfoList);
-        
+        gameInfo.animCmdList = [];
         return gameInfo;
     }
 
@@ -132,13 +133,15 @@ export default class GameController  {
                     for(let i = 0,l = gameInfo.userInfoList.length; i < l; i++) {
                         if(shootRatioList[i] !== 0) {
                             let eachUserInfo = gameInfo.userInfoList[i];
-                            if(eachUserInfo.skillHitStatusInfoList.filter(item => item.skillStatusId === skillStatusInfo.skillStatusId).length === 0){
+                            if(eachUserInfo.skillHitStatusInfoList.filter(item => item.skillStatusInfo === skillStatusInfo).length === 0){
                                 let skillHitStatusInfo = {} as ISkillHitStatusInfo;
                                 skillHitStatusInfo.hitDuration = skillStatusInfo.skillInfo.hitDuration;
-                                skillHitStatusInfo.skillInfo = skillStatusInfo.skillInfo;
-                                skillHitStatusInfo.skillStatusId = skillStatusInfo.skillStatusId;
-                                skillHitStatusInfo.userInfo = skillStatusInfo.userInfo;
+                                //skillHitStatusInfo.skillInfo = skillStatusInfo.skillInfo;
+                                //skillHitStatusInfo.skillStatusId = skillStatusInfo.skillStatusId;
+                                //skillHitStatusInfo.userInfo = skillStatusInfo.userInfo;
+                                skillHitStatusInfo.skillStatusInfo = skillStatusInfo;
                                 skillHitStatusInfo.ratio = shootRatioList[i];
+                                skillHitStatusInfo.step = SkillHitStatusStep.start;
                                 eachUserInfo.skillHitStatusInfoList.push(skillHitStatusInfo);
                             }
                         }

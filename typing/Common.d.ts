@@ -69,14 +69,29 @@ export interface IUserStatusFlags {
     defup:number,//加防
     aglup:number,//加敏
     chaos:number,//混乱
+    sleep:number,//昏睡
+    stone:number,//石化
+    forget:number,//遗忘
+    dice:number,//骰子
+    rebound:number,//反弹
+    invalid:number,//无效
+    reverse:number,//反向
 }
 
 export interface ISkillHitStatusInfo {
-    skillStatusId:string,
+    //skillStatusId:string,
+    skillStatusInfo:ISkillStatusInfo,
     hitDuration:number,
-    skillInfo:ISkillInfo,
-    userInfo:IUserInfo,
+    //skillInfo:ISkillInfo,
+    //userInfo:IUserInfo,
     ratio:number,
+    step:SkillHitStatusStep,
+}
+
+export enum SkillHitStatusStep {
+    start = 0,
+    update = 1,
+    end = 2
 }
 
 export interface IBaseInfo {
@@ -148,6 +163,7 @@ export interface IGameInfo {
     skillStatusInfoList:Array<ISkillStatusInfo>,
     userInfoList:Array<IUserInfo>,
     round:number,
+    animCmdList:Array<IAnimCmd>
 }
 
 export interface IWindInfo {
@@ -161,6 +177,9 @@ export interface ISkillStatusInfo {
     duration:number,
     shootPosition:IPositionInfo,
     userInfo:IUserInfo
+}
+
+export interface IAnimCmd {
 }
 
 
