@@ -24,6 +24,20 @@ export default class Vector {
             let dy = a.y-b.y;
             return Math.sqrt(dx * dx + dy * dy);
         }
+
+        sub(a:IPositionInfo,b:IPositionInfo):IPositionInfo {
+            let positionInfo = {} as IPositionInfo;
+            positionInfo.x = a.x - b.x;
+            positionInfo.y = a.y - b.y;
+            return positionInfo;
+        }
+
+        add(a:IPositionInfo,b:IPositionInfo):IPositionInfo {
+            let positionInfo = {} as IPositionInfo;
+            positionInfo.x = a.x + b.x;
+            positionInfo.y = a.y + b.y;
+            return positionInfo;
+        }
     }
     
     new Vector().initialize();

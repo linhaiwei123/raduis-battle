@@ -163,7 +163,6 @@ export interface IGameInfo {
     skillStatusInfoList:Array<ISkillStatusInfo>,
     userInfoList:Array<IUserInfo>,
     round:number,
-    animCmdList:Array<IAnimCmd>
 }
 
 export interface IWindInfo {
@@ -177,9 +176,6 @@ export interface ISkillStatusInfo {
     duration:number,
     shootPosition:IPositionInfo,
     userInfo:IUserInfo
-}
-
-export interface IAnimCmd {
 }
 
 

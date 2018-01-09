@@ -41,7 +41,6 @@ export default class GameController  {
         gameInfo.roomId = Uuid.instance.create();
         gameInfo.windInfo = this._createWindInfo();
         gameInfo.userInfoList = this._createUserInfoGameContext(userInfoList);
-        gameInfo.animCmdList = [];
         return gameInfo;
     }
 
