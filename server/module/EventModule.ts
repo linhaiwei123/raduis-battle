@@ -1,12 +1,14 @@
-import { IEventMapList } from "../typing/Server";
-
+import { IEventMapList } from "../typings/Server";
+import Logger from "../decorator/Logger";
 export default class EventModule {
 
-    private _eventMapList:IEventMapList;
+    private _eventMapList:IEventMapList
+    @Logger.log
     initialize() {
         this._eventMapList = {};
     }
 
+    @Logger.log
     public on(event:number|string,handler:Function,target:any) {
         if(!this._eventMapList[event]){
             this._eventMapList[event] = [];
@@ -14,6 +16,7 @@ export default class EventModule {
         this._eventMapList[event].push({handler,target});
     }
 
+    @Logger.log
     public off(event: number, handler: Function, target: any) {
         if (this._eventMapList[event]) {
             let iList = [];
@@ -26,6 +29,7 @@ export default class EventModule {
         }
     }
 
+    @Logger.log
     public targetOff(target: any) {
         for (let event in this._eventMapList) {
             let iList = [];
@@ -38,6 +42,7 @@ export default class EventModule {
         }
     }
 
+    @Logger.log
     public emit(event: number, args:any, target?:any) {
         if(this._eventMapList[event]) {
             this._eventMapList[event].forEach((item, i)=>{

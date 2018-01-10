@@ -1,16 +1,20 @@
 import Global from "../global/Global";
-import { Code, IMatchReq, IMatchRsp, IRsp } from "../../typing/Common";
 import Uuid from "../util/Uuid";
+import { Code, IMatchReq, IMatchRsp, IRsp } from "../typings/Common";
+import Logger from "../decorator/Logger";
 
 export default class MatchController {
+    @Logger.log
     initialize() {
         this._initEvent();
     }
 
+    @Logger.log
     private _initEvent() {
         Global.instance.eventModule.on(Code.matchReq, this._onMatchReq, this);
     }
 
+    @Logger.log
     private _onMatchReq(req: IMatchReq) {
         let userInfoItem = Global.instance.dataModule.userInfoList.select(item => item.userId === req.userId)[0];
         //未匹配成功则可以修改匹配状态

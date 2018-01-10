@@ -1,4 +1,5 @@
-import { IPositionInfo } from "../../typing/Common";
+import { IPositionInfo } from "../typings/Common";
+
 
 export default class Vector {
     

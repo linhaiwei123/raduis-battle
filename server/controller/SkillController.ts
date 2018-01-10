@@ -1,11 +1,14 @@
-import {IUserInfo, IGameInfo, ISkillStatusInfo, ISkillHitStatusInfo, SkillHitStatusStep } from "../../typing/Common";
 import Vector from "../util/Vector";
+import { IUserInfo, SkillHitStatusStep, ISkillHitStatusInfo, ISkillStatusInfo } from "../typings/Common";
+import Logger from "../decorator/Logger";
 
 export default class SkillController {
+    @Logger.log
     public initialize() {
 
     }
 
+    @Logger.log
     public updateSkillHitStatusInfoList(userInfo:IUserInfo,skillHitStatus:ISkillHitStatusInfo) {
         for(let skillHitStatus of userInfo.skillHitStatusInfoList) {
             this[skillHitStatus.skillStatusInfo.skillInfo.skillId](userInfo,skillHitStatus);
@@ -21,6 +24,7 @@ export default class SkillController {
         })
     }
 
+    @Logger.log
     public updateSkillStatusInfoList(skillStatusInfoList:Array<ISkillStatusInfo>) {
         skillStatusInfoList.reverse().forEach(item => {
             item.duration--;

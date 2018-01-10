@@ -4,7 +4,7 @@ import DataModule from "../module/DataModule";
 import MatchController from "../controller/MatchController";
 import GameController from "../controller/GameController";
 import SkillController from "../controller/SkillController";
-
+import Logger from "../decorator/Logger";
 export default class Global {
     private static _instance:Global = null;
     public static get instance():Global {
@@ -36,16 +36,19 @@ export default class Global {
         return this._skillController;
     }
     
+    @Logger.log
     initialize() {
         this._initInstance();
         this._initModule();
         this._initController();
-    }
+    } 
 
+    @Logger.log
     private _initInstance() {
-        Global._instance = this;
+        Global._instance = this; 
     }
 
+    @Logger.log
     private _initModule() {
         this._eventModule = new EventModule();
         this._eventModule.initialize();
@@ -57,7 +60,8 @@ export default class Global {
         this._dataModule.initialize();
     }
 
-    private _initController() {
+    @Logger.log
+    private _initController() { 
         this._matchController = new MatchController();
         this._matchController.initialize();
         this._gameController = new GameController();
@@ -69,3 +73,4 @@ export default class Global {
 
 new Global().initialize();
 
+ 

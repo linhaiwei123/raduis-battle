@@ -1,28 +1,32 @@
-import { IUserInfo, IBaseInfo, ISkillInfo, IWeaponInfo, IPositionInfo, IGameInfo, IWindInfo, Code, IMoveReq, IMoveRsp, IRsp, IShootReq, IShootInfo, ISkillStatusInfo, ISkillHitStatusInfo, IUserStatusFlags, SkillHitStatusStep } from "../../typing/Common";
 import Global from "../global/Global";
 import Clone from "../util/Clone";
 import Uuid from "../util/Uuid";
 import Vector from "../util/Vector";
+import { Code, IUserInfo, IUserStatusFlags, IWindInfo, IBaseInfo, IWeaponInfo, ISkillInfo, IPositionInfo, IMoveReq, IMoveRsp, IRsp, IShootReq, ISkillStatusInfo, ISkillHitStatusInfo, SkillHitStatusStep, IShootInfo, IGameInfo } from "../typings/Common";
+import Logger from "../decorator/Logger";
 
 export default class GameController  {
+    @Logger.log
     initialize() {
         this._initEvent();
     }
 
     private _maxPower:number = 10;
 
+    @Logger.log
     private _initEvent() {
         Global.instance.eventModule.on(Code.moveReq,this._onMoveReq,this);
         Global.instance.eventModule.on(Code.shootReq,this._onShootReq,this);
     }
 
-    
+    @Logger.log
     public createGame(userInfoList:Array<IUserInfo>) {
         let gameInfo = this._createGameInfo(userInfoList);
         Global.instance.dataModule.gameInfoList.insert(gameInfo);
         return gameInfo;
     }
 
+    @Logger.log
     private _createUserInfoGameContext(userInfoList:Array<IUserInfo>) {
         userInfoList.forEach(userInfo => {
             userInfo.baseInfo = this._createBaseInfo();
@@ -38,6 +42,7 @@ export default class GameController  {
         return userInfoList;
     }
 
+    @Logger.log
     private _createGameInfo(userInfoList:Array<IUserInfo>) {
         let gameInfo = {} as IGameInfo;
         gameInfo.roomId = Uuid.instance.create();
@@ -49,6 +54,7 @@ export default class GameController  {
         return gameInfo;
     }
 
+    @Logger.log
     private _createWindInfo() {
         let windInfo = {} as IWindInfo;
         windInfo.windAngle = Math.floor((Math.random()*2-1) * 180);
@@ -56,6 +62,7 @@ export default class GameController  {
         return windInfo;
     }
 
+    @Logger.log
     private _createBaseInfo():IBaseInfo {
         let baseInfo = {} as IBaseInfo;
         baseInfo.hp = 100;
@@ -68,6 +75,7 @@ export default class GameController  {
     }
 
     //技能信息
+    @Logger.log
     private _createSkillInfo():ISkillInfo {
         //todo;
         let skillInfo = {} as ISkillInfo;
@@ -78,6 +86,7 @@ export default class GameController  {
     }
 
     //武器信息
+    @Logger.log
     private _createWeaponInfo():IWeaponInfo {
         //todo;
         let weaponInfo = {} as IWeaponInfo;
@@ -88,6 +97,7 @@ export default class GameController  {
     }
 
     //位置信息
+    @Logger.log
     private _createPositionInfo():IPositionInfo {
         //todo;
         let positionInfo = {} as IPositionInfo;
@@ -96,6 +106,7 @@ export default class GameController  {
         return positionInfo;
     }
 
+    @Logger.log
     private _onMoveReq(req:IMoveReq) {
         //不插入位置信息 仅仅保留在客户端
         let moveRsp = {} as IMoveRsp;
@@ -108,6 +119,7 @@ export default class GameController  {
         Global.instance.networkModule.sendToRoom(req.roomId,dataRsp);
     }
 
+    @Logger.log
     private _onShootReq(req:IShootReq) {
         //获取房间信息
         let gameInfoList = Global.instance.dataModule.gameInfoList.select(item => item.roomId === req.roomId);
@@ -177,6 +189,7 @@ export default class GameController  {
         }
     }
 
+    @Logger.log
     private _updatePower(userInfoList:Array<IUserInfo>) {
         let fastestUserInfo:IUserInfo;
         let minDuration:number = Number.POSITIVE_INFINITY;
@@ -199,6 +212,7 @@ export default class GameController  {
         return fastestUserInfo;
     }
 
+    @Logger.log
     private _getShootRatioList(skillStatusInfo:ISkillStatusInfo,userInfoList:Array<IUserInfo>):number[] {
         let ret:number[] = [];
         for(let userInfo of userInfoList) {
@@ -213,6 +227,7 @@ export default class GameController  {
         return ret;
     }
 
+    @Logger.log
     private _getShootPosition(shootInfo:IShootInfo,userInfo:IUserInfo,windInfo:IWindInfo):IPositionInfo {
         let positionInfo = userInfo.positionInfo;
         let shootDirectionOffset = this._getShootDirectionOffset(shootInfo,userInfo.weaponInfo.shootRadius);
@@ -222,6 +237,7 @@ export default class GameController  {
         return positionInfo;
     }
 
+    @Logger.log
     private _getShootDirectionOffset(shootInfo:IShootInfo,length:number):IPositionInfo {
         let positionInfo = {} as IPositionInfo;
         //客户端反向
@@ -231,6 +247,7 @@ export default class GameController  {
         return positionInfo;
     }
 
+    @Logger.log
     private _getWindOffset(windInfo:IWindInfo):IPositionInfo {
         let length = windInfo.windPower * 27;
         let positionInfo = {} as IPositionInfo;
