@@ -1,8 +1,8 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NetworkModule extends cc.Component {
+export default class DataModule extends cc.Component {
     initialize() {
-
+        
     }
 }
