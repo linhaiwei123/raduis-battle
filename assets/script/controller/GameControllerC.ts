@@ -29,6 +29,6 @@ export default class GameControllerC extends cc.Component {
 
     @LoggerC.log
     private _initRender() {
-
+        //初始化玩家位置 信息
     }
 }

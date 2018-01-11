@@ -1,0 +1,30 @@
+{
+  "ver": "1.0.0",
+  "uuid": "ea910883-58bb-461d-a03e-75564cd8d9df",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "subMetas": {
+    "welder": {
+      "ver": "1.0.3",
+      "uuid": "373b8e53-acd1-4893-9f34-a34d465259c8",
+      "rawTextureUuid": "ea910883-58bb-461d-a03e-75564cd8d9df",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 9,
+      "trimY": 0,
+      "width": 110,
+      "height": 128,
+      "rawWidth": 128,
+      "rawHeight": 128,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}

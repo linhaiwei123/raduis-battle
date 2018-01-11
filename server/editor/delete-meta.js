@@ -24,8 +24,8 @@ function findSync(startPath) {
 let fileNames=findSync('./');
 fileNames.forEach(fileName => {
 	console.log(`old:${fileName}|new:${fileName.replace(' ','')}`)
-    //fs.rename(fileName,fileName.replace(' ',''));
-    if(`${fileName}`.endsWith('.meta')){
-        fs.unlink(fileName);
-    }
+    fs.rename(fileName,fileName.split('-').pop().replace(' ',''));
+    // if(`${fileName}`.endsWith('.meta')){
+    //     fs.unlink(fileName);
+    // }
 })
