@@ -1,14 +1,16 @@
-import Logger from "../decorator/Logger";
-import { IEventMapList } from "../typings/Common";
-export default class EventModule {
+import { IEventMapList } from "../typings/CommonC";
+import LoggerC from "../decorator/LoggerC";
+const {ccclass, property} = cc._decorator;
 
+@ccclass
+export default class EventModuleC extends cc.Component{
     private _eventMapList:IEventMapList
-    @Logger.log
+    @LoggerC.log
     initialize() {
         this._eventMapList = {};
     }
 
-    @Logger.log
+    @LoggerC.log
     public on(event:number|string,handler:Function,target:any) {
         if(!this._eventMapList[event]){
             this._eventMapList[event] = [];
@@ -16,7 +18,7 @@ export default class EventModule {
         this._eventMapList[event].push({handler,target});
     }
 
-    @Logger.log
+    @LoggerC.log
     public off(event: number, handler: Function, target: any) {
         if (this._eventMapList[event]) {
             let iList = [];
@@ -29,7 +31,7 @@ export default class EventModule {
         }
     }
 
-    @Logger.log
+    @LoggerC.log
     public targetOff(target: any) {
         for (let event in this._eventMapList) {
             let iList = [];
@@ -42,7 +44,7 @@ export default class EventModule {
         }
     }
 
-    @Logger.log
+    @LoggerC.log
     public emit(event: number, args:any, target?:any) {
         if(this._eventMapList[event]) {
             this._eventMapList[event].forEach((item, i)=>{

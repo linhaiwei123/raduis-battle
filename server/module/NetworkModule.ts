@@ -2,8 +2,7 @@ import WebSocket = require('ws');
 import EventModule from './EventModule';
 import Global from '../global/Global';
 import Uuid from '../util/Uuid';
-import { IWsItem } from '../typings/Server';
-import { IReq, Code, ILoginReq, IUserInfo, ILoginRsp, IRsp } from '../typings/Common';
+import { IReq, Code, ILoginReq, IUserInfo, ILoginRsp, IRsp, IWsItem } from '../typings/Common';
 import Logger from '../decorator/Logger';
 export default class NetWorkModule {
     
@@ -28,7 +27,7 @@ export default class NetWorkModule {
     @Logger.log
     private _onConnection(ws:WebSocket) {
         //保存wsItem
-        let wsItem = {} as IWsItem;
+        let wsItem = {} as IWsItem; 
         wsItem.userId = Uuid.instance.create();
         wsItem.ws = <any>ws;
         Global.instance.dataModule.wsList.insert(<any>wsItem);
@@ -41,6 +40,7 @@ export default class NetWorkModule {
                 let userInfoItem = {} as IUserInfo;
                 userInfoItem.name = req.name;
                 userInfoItem.userId = wsItem.userId;
+                //todo 处理重连
                 Global.instance.dataModule.userInfoList.insert(userInfoItem);
                 //返回login rsp
                 let rsp = {} as ILoginRsp;
@@ -55,9 +55,11 @@ export default class NetWorkModule {
         });
         ws.on('error',(err:Error) =>{
             console.log(err);
+            Global.instance.dataModule.wsList.delete(<any>wsItem);
         })
         ws.on('close',(code:number,reason:string)=>{
             console.log({code,reason});
+            Global.instance.dataModule.wsList.delete(<any>wsItem);
         })
     }
 
@@ -65,7 +67,9 @@ export default class NetWorkModule {
     public sendToUser(userId:string,rsp:IRsp) {
         let wsList = Global.instance.dataModule.wsList.select(item => item.userId === userId);
         if(wsList && wsList.length !== 0) {
-            wsList[0].ws.send(JSON.stringify(rsp));
+            if(wsList[0].ws.readyState === WebSocket.OPEN){
+                wsList[0].ws.send(JSON.stringify(rsp));
+            }
         }
     }
 

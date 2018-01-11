@@ -47,7 +47,7 @@ export default class MatchController {
                 }
 
                 //GameController生成房间
-                let gameInfo = Global.instance.gameController.createGame(matchingUserInfoList);
+                let gameInfo = Global.instance.gameController.createGame(roomUserInfoList);
                 let matchRsp = {} as IMatchRsp;
                 matchRsp.gameInfo = gameInfo;
                 let dataRsp = {} as IRsp;
