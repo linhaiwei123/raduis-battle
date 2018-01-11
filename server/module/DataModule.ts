@@ -1,8 +1,7 @@
 import Clone from "../util/Clone";
 import skillInfoList from '../excel/skill';
 import weaponInfoList from '../excel/weapon';
-import { IUserInfo, ISkillInfo, IWeaponInfo, IGameInfo } from "../typings/Common";
-import { IWsItem } from "../typings/Server";
+import { IUserInfo, ISkillInfo, IWeaponInfo, IGameInfo, IWsItem } from "../typings/Common";
 import Logger from "../decorator/Logger";
 
 export default class DataModule {

@@ -1,8 +1,8 @@
 export default class Logger {
     public static log(target, methodName: string, descriptor: PropertyDescriptor) {
         const oldValue: Function = descriptor.value;
-        let signature = new RegExp(methodName + '(.*)').exec(oldValue.toString())[1];
-        signature = signature.substring(0,signature.lastIndexOf(')')+1);
+        let signature = new RegExp('(.*)').exec(oldValue.toString())[1];
+        signature = signature.substring(signature.indexOf('('),signature.lastIndexOf(')')+1);
         descriptor.value = function (...args) {
             try {
                 Logger.logFormat(target,methodName,signature,args,'');
