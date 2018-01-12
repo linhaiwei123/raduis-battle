@@ -1,5 +1,5 @@
 
-import { IWsItem, IUserInfo, ISkillInfo, IWeaponInfo, IGameInfo } from "../typings/CommonC";
+import { IWsItem, IUserInfo, ISkillInfo, IWeaponInfo, IGameInfo, IUserControllerItem } from "../typings/CommonC";
 import LoggerC from "../decorator/LoggerC";
 const {ccclass, property} = cc._decorator;
 
@@ -67,6 +67,26 @@ export default class DataModuleC extends cc.Component{
         this._gameInfo = v;
     }
 
+    public get userCtrlList() {
+        return this.get<IUserControllerItem>('userCtrl');
+    }
+
+    private _skillInfo:ISkillInfo = null;
+
+    public set skillInfo(v:ISkillInfo) {
+        this._skillInfo = v;
+    }       
+    public get skillInfo():ISkillInfo {
+        return this._skillInfo;
+    }
+
+    private _skillIdx:number = null;
+    public get skillIdx():number {
+        return this._skillIdx;
+    }
+    public set skillIdx(v:number) {
+        this._skillIdx = v;
+    }
 }
 
 class Collection<T> {

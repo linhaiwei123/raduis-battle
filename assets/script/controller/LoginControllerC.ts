@@ -49,6 +49,10 @@ export default class LoginControllerC extends cc.Component {
         GlobalC.instance.eventModuleC.on(Code.loginRsp,this._onLoginRsp,this); 
     }
 
+    private onDestroy() {
+        GlobalC.instance.eventModuleC.off(Code.loginRsp,this._onLoginRsp,this); 
+    }
+
     @LoggerC.log
     private _onLoginRsp(rsp:ILoginRsp) {
         GlobalC.instance.dataModuleC.selfUserId = rsp.userId;

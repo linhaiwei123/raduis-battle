@@ -1,18 +1,23 @@
-const {ccclass, property,requireComponent} = cc._decorator;
+const {ccclass, property,requireComponent,executeInEditMode} = cc._decorator;
 
 @ccclass
 @requireComponent(cc.Graphics)
+@executeInEditMode()
 export default class CircleC extends cc.Component {
 
-    @property()
-    public radius:number = 128;
+    private _radius:number = 64;
 
     @property()
-    public set test(v:boolean) {
+    public set radius(v:number) {
+        this._radius = v;
         this.draw();
     }
-    public get test():boolean {
-        return false;
+    public get radius():number {
+        return this._radius;
+    }
+
+    onLoad() {
+        this.draw();
     }
 
     public draw() {

@@ -1,3 +1,5 @@
+import UserControllerC from "../controller/UserControllerC";
+
 export enum Code {
     //登陆
     loginReq = 1,
@@ -13,6 +15,9 @@ export enum Code {
 
     shootReq = 10,
     shootRsp = 11,
+
+    //摇杆
+    joyStickUpdate = 12,
 }
 
 export interface IReq {
@@ -193,3 +198,26 @@ export interface IWsItem {
     ws:WebSocket,
 }
 
+//client
+export interface IJoyStickInfo {
+    type:JoyStickType,
+    direction:cc.Vec2,
+    ratio:number,
+    status:JoyStickStatus
+}
+
+export enum JoyStickType {
+    move = 0,
+    shoot = 1,
+}
+
+export enum JoyStickStatus {
+    start = 0,
+    update = 1,
+    end = 2,
+}
+
+export interface IUserControllerItem {
+    userCtrl:UserControllerC,
+    userId:string,
+}

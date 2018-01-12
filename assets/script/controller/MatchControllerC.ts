@@ -26,6 +26,10 @@ export default class MatchControllerC extends cc.Component {
         GlobalC.instance.eventModuleC.on(Code.matchRsp,this._onMatchRsp,this)
     }
 
+    onDestroy() {
+        GlobalC.instance.eventModuleC.off(Code.matchRsp,this._onMatchRsp,this)
+    }
+
     @LoggerC.log
     private _onMatchRsp(rsp:IMatchRsp) {
         GlobalC.instance.dataModuleC.gameInfo = rsp.gameInfo;
