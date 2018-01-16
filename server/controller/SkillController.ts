@@ -1,5 +1,5 @@
 import Vector from "../util/Vector";
-import { IUserInfo, SkillHitStatusStep, ISkillHitStatusInfo, ISkillStatusInfo } from "../typings/Common";
+import { IUserInfo, SkillHitStatusStep, ISkillHitStatusInfo, ISkillStatusInfo, IRetLog } from "../typings/Common";
 import Logger from "../decorator/Logger";
 
 export default class SkillController {
@@ -40,12 +40,13 @@ export default class SkillController {
         return Math.max(1,srcBaseInfo.atk * ratio - dstBaseInfo.def);
     }
 
-    //连击 //todo 在GameController 处理
+    //连击 
     public '0'(userInfo:IUserInfo,skillHitStatus:ISkillHitStatusInfo) {
         switch(skillHitStatus.step) {
             case SkillHitStatusStep.start: {
                 let hit = this._getHit(userInfo,skillHitStatus.skillStatusInfo.userInfo,skillHitStatus.ratio);
-                userInfo.baseInfo.hp -= hit;
+                userInfo.baseInfo.hp -= hit * 2;
+                
                 break;
             }
             case SkillHitStatusStep.update: {

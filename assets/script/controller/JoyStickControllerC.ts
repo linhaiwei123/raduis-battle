@@ -28,10 +28,9 @@ export default class JoyStickControllerC extends cc.Component {
 
     private _onTouchStart(e:cc.Event.EventTouch) {
         let localPos = this.circleStick.node.parent.convertToNodeSpaceAR(e.getLocation());
-        this.circleStick.node.position = localPos;
-        
         let direction = localPos.normalize();
         let radio = Math.min(1,localPos.mag()/this.maxMoveRadius);
+        this.circleStick.node.position = cc.pMult(direction,radio * this.maxMoveRadius);
 
         let joyStickInfo = {} as IJoyStickInfo;
         joyStickInfo.direction = direction;
@@ -43,10 +42,9 @@ export default class JoyStickControllerC extends cc.Component {
 
     private _onTouchMove(e:cc.Event.EventTouch) {
         let localPos = this.circleStick.node.parent.convertToNodeSpaceAR(e.getLocation());
-        this.circleStick.node.position = localPos;
-        
         let direction = localPos.normalize();
         let radio = Math.min(1,localPos.mag()/this.maxMoveRadius);
+        this.circleStick.node.position = cc.pMult(direction,radio * this.maxMoveRadius);
 
         let joyStickInfo = {} as IJoyStickInfo;
         joyStickInfo.direction = direction;
@@ -57,7 +55,8 @@ export default class JoyStickControllerC extends cc.Component {
     }
 
     private _onTouchEnd(e:cc.Event.EventTouch) {
-        let localPos = this.circleStick.node.parent.convertToNodeSpaceAR(e.getLocation());
+        //let localPos = this.circleStick.node.parent.convertToNodeSpaceAR(e.getLocation());
+        let localPos = cc.v2();
         this.circleStick.node.position = localPos;
         
         let direction = localPos.normalize();

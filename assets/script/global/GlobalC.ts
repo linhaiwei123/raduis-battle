@@ -2,6 +2,7 @@ import NetworkModuleC from "../module/NetworkModuleC";
 import DataModuleC from "../module/DataModuleC";
 import EventModuleC from "../module/EventModuleC";
 import LoggerC from "../decorator/LoggerC";
+import ResModuleC from "../module/ResModuleC";
 
 const {ccclass, property} = cc._decorator;
 @ccclass
@@ -30,6 +31,10 @@ export default class GlobalC extends cc.Component {
     public get eventModuleC():EventModuleC {
         return this._eventModuleC;
     }
+    private _resModuleC:ResModuleC;
+    public get resModuleC():ResModuleC {
+        return this._resModuleC;
+    }
     
     @LoggerC.log
     public initialize() {
@@ -44,5 +49,9 @@ export default class GlobalC extends cc.Component {
         this._networkModuleC = this.node.addComponent(NetworkModuleC);
         this._networkModuleC.initialize();
         (<any>window)._networkModuleC = this._dataModuleC;
+
+        this._resModuleC = this.node.addComponent(ResModuleC);
+        this._resModuleC.initialize();
+        (<any>window)._resModuleC = this._resModuleC;
     }
 }
