@@ -22,8 +22,7 @@ export default class ShootControllerC extends cc.Component {
         this._renderShoot(rsp);
     }
 
-    private _onJoyStickUpdate(e: cc.Event.EventCustom) {
-        let joyStickInfo = e.detail as IJoyStickInfo;
+    private _onJoyStickUpdate(joyStickInfo: IJoyStickInfo) {
         if (joyStickInfo.type == JoyStickType.shoot) {
             let fastUserId = GlobalC.instance.dataModuleC.gameInfo.fastestUserInfo.userId;
             let selfUserId = GlobalC.instance.dataModuleC.selfUserId;

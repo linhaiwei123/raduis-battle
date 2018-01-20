@@ -1,5 +1,5 @@
 import Vector from "../util/Vector";
-import { IUserInfo, SkillHitStatusStep, ISkillHitStatusInfo, ISkillStatusInfo, IRetLog } from "../typings/Common";
+import { IUserInfo, SkillHitStatusStep, ISkillHitStatusInfo, ISkillStatusInfo } from "../typings/Common";
 import Logger from "../decorator/Logger";
 
 export default class SkillController {

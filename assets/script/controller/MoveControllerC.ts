@@ -31,15 +31,15 @@ export default class MoveControllerC extends cc.Component {
     
     private _position:cc.Vec2;
     private _currUserCtrlItem:IUserControllerItem;
+    private _direction:cc.Vec2;
     
-    private _onJoyStickUpdate(e: cc.Event.EventCustom) {
-        let joyStickInfo = e.detail as IJoyStickInfo;
+    private _onJoyStickUpdate(joyStickInfo: IJoyStickInfo) {
         if (joyStickInfo.type == JoyStickType.move) {
             let fastUserId = GlobalC.instance.dataModuleC.gameInfo.fastestUserInfo.userId;
             let selfUserId = GlobalC.instance.dataModuleC.selfUserId;
             if (fastUserId === selfUserId) {
                 this._currUserCtrlItem = GlobalC.instance.dataModuleC.userCtrlList.select(item => item.userId === selfUserId)[0];
-                this._position =  cc.pAdd(this._currUserCtrlItem.userCtrl.node.position,joyStickInfo.direction.normalize().mul(this._currUserCtrlItem.userCtrl.speed));
+                this._direction = joyStickInfo.direction.normalize();
                 switch(joyStickInfo.status) {
                     case JoyStickStatus.start: {
                         this._scheduleMove();
@@ -59,6 +59,7 @@ export default class MoveControllerC extends cc.Component {
     }
 
     private _scheduleMove() {
+        
         this.schedule(this._moveTick,1/60);
     }
 
@@ -66,7 +67,13 @@ export default class MoveControllerC extends cc.Component {
         this.unschedule(this._moveTick);
     }
 
+    private _calMoveNextPos() {
+        let node = this._currUserCtrlItem.userCtrl.node;
+        this._position =  cc.pAdd(node.position,this._direction.mul(this._currUserCtrlItem.userCtrl.speed));
+    }
+
     private _moveTick() {
+        this._calMoveNextPos();
         this._renderMove();
         if(this._currUserCtrlItem.userId === GlobalC.instance.dataModuleC.selfUserId){
             this._sendToServer();
@@ -75,13 +82,14 @@ export default class MoveControllerC extends cc.Component {
 
     private _renderMove() {
         let node = this._currUserCtrlItem.userCtrl.node;
-        let speed = this._currUserCtrlItem.userCtrl.speed;
         node.position = this._position;
     }  
 
     private _sendToServer() {
         let moveReq = {} as IMoveReq;
         moveReq.positionInfo = {} as IPositionInfo;
+        moveReq.positionInfo.x = this._position.x;
+        moveReq.positionInfo.y = this._position.y;
         moveReq.roomId = GlobalC.instance.dataModuleC.gameInfo.roomId;
         moveReq.userId = GlobalC.instance.dataModuleC.selfUserId;
         let req = {} as IReq;

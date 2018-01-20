@@ -100,9 +100,9 @@ export default class GameController  {
     @Logger.log
     private _createPositionInfo():IPositionInfo {
         //todo;
-        let positionInfo = {} as IPositionInfo;
-        positionInfo.x = Math.random() * 1280;
-        positionInfo.y = Math.random() * 720;
+        let positionInfo = {} as IPositionInfo;  
+        positionInfo.x = (Math.random()-0.5) * 1280;
+        positionInfo.y = (Math.random()-0.5) * 720;
         return positionInfo;
     }
 

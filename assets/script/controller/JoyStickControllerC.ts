@@ -24,6 +24,7 @@ export default class JoyStickControllerC extends cc.Component {
         this.circleStick.node.on('touchstart',this._onTouchStart,this);
         this.circleStick.node.on('touchmove',this._onTouchMove,this);
         this.circleStick.node.on('touhend',this._onTouchEnd,this);
+        this.circleStick.node.on('touhcancel',this._onTouchEnd,this);
     }
 
     private _onTouchStart(e:cc.Event.EventTouch) {
@@ -59,12 +60,14 @@ export default class JoyStickControllerC extends cc.Component {
         let localPos = cc.v2();
         this.circleStick.node.position = localPos;
         
-        let direction = localPos.normalize();
-        let radio = Math.min(1,localPos.mag()/this.maxMoveRadius);
+        //let direction = localPos.normalize();
+        //let radio = Math.min(1,localPos.mag()/this.maxMoveRadius);
+        let direction = cc.v2();
+        let ratio = 0;
 
         let joyStickInfo = {} as IJoyStickInfo;
         joyStickInfo.direction = direction;
-        joyStickInfo.ratio = radio;
+        joyStickInfo.ratio = ratio;
         joyStickInfo.type = this.joyStickType;
         joyStickInfo.status = JoyStickStatus.end
         GlobalC.instance.eventModuleC.emit(Code.joyStickUpdate,joyStickInfo);
