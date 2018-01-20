@@ -23,8 +23,8 @@ export default class JoyStickControllerC extends cc.Component {
     onLoad() {
         this.circleStick.node.on('touchstart',this._onTouchStart,this);
         this.circleStick.node.on('touchmove',this._onTouchMove,this);
-        this.circleStick.node.on('touhend',this._onTouchEnd,this);
-        this.circleStick.node.on('touhcancel',this._onTouchEnd,this);
+        this.circleStick.node.on('touchend',this._onTouchEnd,this);
+        this.circleStick.node.on('touchcancel',this._onTouchEnd,this);
     }
 
     private _onTouchStart(e:cc.Event.EventTouch) {
